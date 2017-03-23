@@ -64,6 +64,7 @@ def human_to_number(src):
 
     # 倍数配置
     multiple_dict = dict(
+        b=0,
         k=1,
         m=2,
         g=3,
