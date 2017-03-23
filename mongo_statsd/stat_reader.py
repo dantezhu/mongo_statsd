@@ -28,6 +28,7 @@ class StatReader(object):
         values = None
 
         for line in os.popen(self.cmd):
+            line = line.strip()
             if line.startswith('connected'):
                 continue
 
@@ -40,6 +41,7 @@ class StatReader(object):
                 continue
 
             values = re.split(r'\s+', line)
+            break
 
         result = dict(zip(keys, values))
 
