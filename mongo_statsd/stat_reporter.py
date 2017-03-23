@@ -15,7 +15,7 @@ class StatReporter(object):
     stat_reader = None
     statsd_client = None
 
-    def __init__(self, statsd_client, name, username=None, password=None):
+    def __init__(self, statsd_client, name, host=None, port=None, username=None, password=None):
         """
         :param cmd: 命令
         :param statsd_client: statsd_client
@@ -24,6 +24,12 @@ class StatReporter(object):
         """
 
         cmd = constants.CMD_TPL
+        if host is not None:
+            cmd += ' -h %s' % host
+
+        if port is not None:
+            cmd += ' --port %s' % port
+
         if username is not None:
             cmd += ' -u %s' % username
 
