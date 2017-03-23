@@ -1,95 +1,102 @@
 # -*- coding: utf-8 -*-
 
-# 直接gauge的
-GAUGE_STAT_LIST = [
-    'CLIENTS',
-    'AUTHED_CLIENTS',
+"""
+insert  query update delete getmore command flushes mapped  vsize    res non-mapped faults            locked db idx miss %     qr|qw   ar|aw  netIn netOut  conn       time
+132     *0     *0     *0       0   184|0       0  1181g  2368g  7.38g      1187g      2 texas_statistic:0.8%          0       0|0     0|0    53k    23k  1060   10:17:56
 
-    'TRIGGERS',
 
-    'WORKERS',
-    'IDLE_WORKERS',
+inserts  	- # of inserts per second (* means replicated op)
+query    	- # of queries per second
+update   	- # of updates per second
+delete   	- # of deletes per second
+getmore  	- # of get mores (cursor batch) per second
+command  	- # of commands per second, on a slave its local|replicated
+flushes  	- # of fsync flushes per second
+mapped   	- amount of data mmaped (total data size) megabytes
+vsize    	- virtual size of process in megabytes
+res      	- resident size of process in megabytes
+faults   	- # of pages faults per sec
+locked   	- name of and percent time for most locked database
+idx miss 	- percent of btree page misses (sampled)
+qr|qw    	- queue lengths for clients waiting (read|write)
+ar|aw    	- active clients (read|write)
+netIn    	- network traffic in - bits
+netOut   	- network traffic out - bits
+conn     	- number of open connections
+set      	- replica set name
+repl     	- replication type
+                PRI - primary (master)
+                SEC - secondary
+                REC - recovering
+                UNK - unknown
+                SLV - slave
+                RTR - mongos process ("router")
+"""
 
-    'STORES',
-    'CONNECTED_STORES',
+PREFIX = 'mongo'
 
-    'CLIENT_PENDING_SEND_BUF',
 
-    'INNER_PENDING_TASKS',
-    'INNER_PENDING_SEND_BUF',
+def safe_int(src):
+    try:
+        return int(src)
+    except:
+        return 0
 
-    'STORE_PENDING_TASKS',
+
+def safe_tuple(src):
+    """
+    返回数组
+    :param src:
+    :return:
+    """
+    try:
+        return [safe_int(it) for it in src.split('|')]
+    except:
+        return 0
+
+
+def human_to_number(src):
+    """
+    将给人类读的，变成机器
+    :param src:
+    :return:
+    """
+
+    # 倍数配置
+    multiple_dict = dict(
+        k=1,
+        m=2,
+        g=3,
+        t=4,
+    )
+
+    for key, multiple in multiple_dict.items():
+        if key in src:
+            return float(src.replace(key, '')) * (1024 ** multiple)
+
+HEADER_LIST = [
+    ('insert', 'i', safe_int),
+    ('query', 'i', safe_int),
+    ('update', 'i', safe_int),
+    ('delete', 'i', safe_int),
+    ('getmore', 'i', safe_int),
+    ('command', 'i', safe_tuple),  # 返回了数组
+    ('flushes', 'i', safe_int),
+    ('mapped', 'g', human_to_number),
+    ('vsize', 'g', human_to_number),
+    ('res', 'g', human_to_number),
+    ('non-mapped', 'g', human_to_number),
+    ('faults', 'i', safe_int),
+    ('locked db', None, None),
+    ('idx miss %', None, None),
+    ('qr|qw', 'i', safe_tuple),
+    ('ar|aw', 'i', safe_tuple),
+    ('netIn', 'i', safe_int),
+    ('netOut', 'i', safe_int),
+    ('conn', 'g', safe_int),
+    ('time', None, None),
 ]
 
-# 间隔一段时间，然后调用incr的
-INCR_STAT_LIST = [
-    'CLIENT_REQ',
-    'CLIENT_CREATED',
-    'CLIENT_CLOSED',
-    'CLIENT_TIMEOUT',
-    'CLIENT_CONN_OVERFLOW',
-    'CLIENT_SEND_BUF_OVERFLOW',
-    'CLIENT_RECV_BUF_OVERFLOW',
-    'CLIENT_CREATE_RATE_LIMITED',
-    'CLIENT_UNAUTHED_REQ_RATE_LIMITED',
-    'CLIENT_AUTHED_REQ_RATE_LIMITED',
+HEADER_DICT = dict([(header[0], header) for header in HEADER_LIST])
 
-    'INNER_REQ',
-    'INNER_CREATED',
-    'INNER_CLOSED',
-    'INNER_TIMEOUT',
-    'INNER_CONN_OVERFLOW',
-    'INNER_TASK_OVERFLOW',
-    'INNER_SEND_BUF_OVERFLOW',
-    'INNER_RECV_BUF_OVERFLOW',
-    'INNER_TASK_ALLOC_RATE_LIMITED',
-
-    'STORE_REQ',
-    'STORE_RSP',
-    'STORE_RSP_FAIL',
-    'STORE_CONNECT',
-    'STORE_CONNECTED',
-    'STORE_CLOSED',
-    'STORE_TIMEOUT',
-    'STORE_TASK_OVERFLOW',
-
-    'CMD_WORKER_ASK_FOR_TASK',
-    'CMD_WRITE_TO_CLIENT',
-    'CMD_WRITE_TO_USERS',
-    'CMD_CLOSE_CLIENT',
-    'CMD_CLOSE_USERS',
-    'CMD_LOGIN_CLIENT',
-    'CMD_LOGOUT_CLIENT',
-    'CMD_WRITE_TO_WORKER',
-    'CMD_CLEAR_CLIENT_TASKS',
-
-    'TASK_TIME_1_MS',
-    'TASK_TIME_3_MS',
-    'TASK_TIME_5_MS',
-    'TASK_TIME_10_MS',
-    'TASK_TIME_30_MS',
-    'TASK_TIME_50_MS',
-    'TASK_TIME_100_MS',
-    'TASK_TIME_300_MS',
-    'TASK_TIME_500_MS',
-    'TASK_TIME_1_S',
-    'TASK_TIME_3_S',
-    'TASK_TIME_5_S',
-    'TASK_TIME_10_S',
-    'TASK_TIME_MORE',
-
-    'STORE_TIME_1_MS',
-    'STORE_TIME_3_MS',
-    'STORE_TIME_5_MS',
-    'STORE_TIME_10_MS',
-    'STORE_TIME_30_MS',
-    'STORE_TIME_50_MS',
-    'STORE_TIME_100_MS',
-    'STORE_TIME_300_MS',
-    'STORE_TIME_500_MS',
-    'STORE_TIME_1_S',
-    'STORE_TIME_3_S',
-    'STORE_TIME_5_S',
-    'STORE_TIME_10_S',
-    'STORE_TIME_MORE',
-]
+CMD_TPL = 'mongostat -u {username} -p {password} --quiet --noheaders -n 1'
