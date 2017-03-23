@@ -76,7 +76,7 @@ class StatReporter(object):
                 if '|' in local_stat_name:
                     sub_local_stat_name_list = local_stat_name.split('|')
                 else:
-                    sub_local_stat_name_list = ['%s_%s' % (local_stat_name, it) for it in len(remote_value)]
+                    sub_local_stat_name_list = ['%s_%s' % (local_stat_name, it) for it in xrange(0, len(remote_value))]
 
                 # 说明直接拆分就好
                 # 并且索引位置一致
