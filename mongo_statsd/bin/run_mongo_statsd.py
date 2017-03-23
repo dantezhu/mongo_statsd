@@ -11,13 +11,13 @@ import mongo_statsd
 
 def build_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--name', help='stat name', action='store')
-    parser.add_argument('--statsd_host', help='statsd host', action='store')
-    parser.add_argument('--statsd_port', default=8125, type=int, help='statsd port', action='store', required=False)
-    parser.add_argument('--mongodb_host', help='mongodb host', action='store', required=False)
-    parser.add_argument('--mongodb_port', type=int, help='mongdb port', action='store', required=False)
-    parser.add_argument('--mongodb_username', help='mongodb username', action='store', required=False)
-    parser.add_argument('--mongodb_password', help='mongodb password', action='store', required=False)
+    parser.add_argument('--name', help='stat name', action='store', required=True)
+    parser.add_argument('--statsd_host', help='statsd host', action='store', required=True)
+    parser.add_argument('--statsd_port', default=8125, type=int, help='statsd port', action='store')
+    parser.add_argument('--mongodb_host', help='mongodb host', action='store')
+    parser.add_argument('--mongodb_port', type=int, help='mongdb port', action='store')
+    parser.add_argument('--mongodb_username', help='mongodb username', action='store')
+    parser.add_argument('--mongodb_password', help='mongodb password', action='store')
     parser.add_argument('-v', '--version', action='version', version='%s' % mongo_statsd.__version__)
 
     return parser
