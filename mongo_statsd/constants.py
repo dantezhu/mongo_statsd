@@ -35,6 +35,11 @@ repl     	- replication type
 
 PREFIX = 'mongo'
 
+REPLACE_HEADER_LIST = {
+    'locked db': 'locked_db',
+    'idx miss %': 'idx_miss_percent',
+}
+
 
 def safe_int(src):
     try:
@@ -88,8 +93,8 @@ HEADER_LIST = [
     ('res', 'g', human_to_number),
     ('non-mapped', 'g', human_to_number),
     ('faults', 'i', safe_int),
-    ('locked db', None, None),
-    ('idx miss %', None, None),
+    ('locked_db', None, None),
+    ('idx_miss_percent', None, None),
     ('qr|qw', 'i', safe_tuple),
     ('ar|aw', 'i', safe_tuple),
     ('netIn', 'i', safe_int),
@@ -100,4 +105,4 @@ HEADER_LIST = [
 
 HEADER_DICT = dict([(header[0], header) for header in HEADER_LIST])
 
-CMD_TPL = 'mongostat --quiet --noheaders -n 1'
+CMD_TPL = 'mongostat -n 1'

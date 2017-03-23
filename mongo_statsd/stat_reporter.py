@@ -36,9 +36,7 @@ class StatReporter(object):
         if password is not None:
             cmd += ' -p %s' % password
 
-        print cmd
-
-        self.stat_reader = StatReader(cmd, constants.HEADER_DICT.keys())
+        self.stat_reader = StatReader(cmd)
         self.statsd_client = statsd_client
         self.name = name
 
