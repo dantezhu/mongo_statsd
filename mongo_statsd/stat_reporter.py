@@ -15,13 +15,20 @@ class StatReporter(object):
     stat_reader = None
     statsd_client = None
 
-    def __init__(self, cmd, statsd_client, name):
+    def __init__(self, statsd_client, name, username=None, password=None):
         """
         :param cmd: 命令
         :param statsd_client: statsd_client
         :param name: 名字
         :return:
         """
+
+        cmd = constants.CMD_TPL
+        if username is not None:
+            cmd += ' -u %s' % username
+
+        if password is not None:
+            cmd += ' -p %s' % password
 
         self.stat_reader = StatReader(cmd, constants.HEADER_DICT.keys())
         self.statsd_client = statsd_client

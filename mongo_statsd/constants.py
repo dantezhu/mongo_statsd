@@ -99,4 +99,4 @@ HEADER_LIST = [
 
 HEADER_DICT = dict([(header[0], header) for header in HEADER_LIST])
 
-CMD_TPL = 'mongostat -u {username} -p {password} --quiet --noheaders -n 1'
+CMD_TPL = 'mongostat --quiet --noheaders -n 1'
