@@ -35,12 +35,13 @@ def run():
 
     while True:
 
-        stat_reporter.report()
-
         try:
+            stat_reporter.report()
             time.sleep(1)
         except KeyboardInterrupt:
             sys.exit(0)
+        except Exception, e:
+            sys.stderr.write('exc occur. e: %s\n' % e)
 
 if __name__ == '__main__':
     run()
